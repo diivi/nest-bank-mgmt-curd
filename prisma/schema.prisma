@@ -14,9 +14,11 @@ model User{
   id Int @id @default(autoincrement())
   accountNumber String @unique
   email String @unique
+  hashedPassword String
   name String
   balance Int
   blacklisted Boolean? @default(false)
+  passwordChanged Boolean? @default(false)
   transactionsSent Transaction[]  @relation(name: "SentTransactions")
   transactionsReceived Transaction[]  @relation(name: "ReceivedTransactions")
   createdAt DateTime @default(now())

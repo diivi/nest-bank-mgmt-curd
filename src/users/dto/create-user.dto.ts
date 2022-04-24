@@ -5,10 +5,11 @@ import {
   IsPositive,
   IsString,
   Length,
+  MinLength,
 } from 'class-validator';
 
 export class CreateUserDto {
-  @Length(10,10)
+  @Length(10, 10)
   @IsString()
   @IsNotEmpty()
   accountNumber: string;
