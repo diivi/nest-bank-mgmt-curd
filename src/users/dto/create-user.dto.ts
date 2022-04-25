@@ -5,7 +5,6 @@ import {
   IsPositive,
   IsString,
   Length,
-  MinLength,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -19,6 +18,5 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
   @IsNumber()
-  @IsPositive()
   balance: number;
 }

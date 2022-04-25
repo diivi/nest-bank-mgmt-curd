@@ -1,0 +1,42 @@
+/*
+  Warnings:
+
+  - You are about to alter the column `balance` on the `users` table. The data in that column could be lost. The data in that column will be cast from `Decimal` to `Float`.
+  - You are about to alter the column `amount` on the `transactions` table. The data in that column could be lost. The data in that column will be cast from `Decimal` to `Float`.
+
+*/
+-- RedefineTables
+PRAGMA foreign_keys=OFF;
+CREATE TABLE "new_users" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "accountNumber" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "hashedPassword" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "balance" REAL NOT NULL,
+    "blacklisted" BOOLEAN DEFAULT false,
+    "passwordChanged" BOOLEAN DEFAULT false,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);
+INSERT INTO "new_users" ("accountNumber", "balance", "blacklisted", "createdAt", "email", "hashedPassword", "id", "name", "passwordChanged", "updatedAt") SELECT "accountNumber", "balance", "blacklisted", "createdAt", "email", "hashedPassword", "id", "name", "passwordChanged", "updatedAt" FROM "users";
+DROP TABLE "users";
+ALTER TABLE "new_users" RENAME TO "users";
+CREATE UNIQUE INDEX "users_accountNumber_key" ON "users"("accountNumber");
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+CREATE TABLE "new_transactions" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "accountFrom" TEXT NOT NULL,
+    "accountTo" TEXT NOT NULL,
+    "amount" REAL NOT NULL,
+    "type" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "transactions_accountFrom_fkey" FOREIGN KEY ("accountFrom") REFERENCES "users" ("accountNumber") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "transactions_accountTo_fkey" FOREIGN KEY ("accountTo") REFERENCES "users" ("accountNumber") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+INSERT INTO "new_transactions" ("accountFrom", "accountTo", "amount", "createdAt", "id", "type", "updatedAt") SELECT "accountFrom", "accountTo", "amount", "createdAt", "id", "type", "updatedAt" FROM "transactions";
+DROP TABLE "transactions";
+ALTER TABLE "new_transactions" RENAME TO "transactions";
+PRAGMA foreign_key_check;
+PRAGMA foreign_keys=ON;

@@ -11,6 +11,9 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     // random string of 10 characters
+    if (createUserDto.balance < 0) {
+      throw new ForbiddenException('Balance can not be negative.');
+    }
     const password = Math.random().toString(36).substring(2, 12);
     const hashedPassword = await argon.hash(password);
     try {

@@ -16,7 +16,7 @@ model User{
   email String @unique
   hashedPassword String
   name String
-  balance Int
+  balance Float
   blacklisted Boolean? @default(false)
   passwordChanged Boolean? @default(false)
   transactionsSent Transaction[]  @relation(name: "SentTransactions")
@@ -33,7 +33,7 @@ model Transaction{
   accountFrom String
   userTo User @relation(name: "ReceivedTransactions", fields: [accountTo], references: [accountNumber])
   accountTo String
-  amount Int
+  amount Float
   type String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
