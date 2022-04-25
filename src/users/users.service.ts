@@ -57,8 +57,26 @@ export class UsersService {
     });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    if (updateUserDto.balance < 0) {
+      throw new ForbiddenException('Balance can not be negative.');
+    }
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    1;
+    return this.prisma.user.update({
+      where: {
+        id: id,
+      },
+      data: {
+        name: updateUserDto.name || user.name,
+        email: updateUserDto.email || user.email,
+        balance: updateUserDto.balance || user.balance,
+      },
+    });
   }
 
   async remove(id: number) {
