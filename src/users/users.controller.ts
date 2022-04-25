@@ -22,6 +22,7 @@ export class UsersController {
 
   @Get()
   findAll() {
+    //pagination can be implemented here.
     return this.usersService.findAll();
   }
 

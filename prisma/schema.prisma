@@ -29,9 +29,9 @@ model User{
 
 model Transaction{
   id Int @id @default(autoincrement())
-  userFrom User @relation(name: "SentTransactions", fields: [accountFrom], references: [accountNumber])
+  userFrom User @relation(name: "SentTransactions", fields: [accountFrom], references: [accountNumber], onDelete: NoAction)
   accountFrom String
-  userTo User @relation(name: "ReceivedTransactions", fields: [accountTo], references: [accountNumber])
+  userTo User @relation(name: "ReceivedTransactions", fields: [accountTo], references: [accountNumber],onDelete: NoAction)
   accountTo String
   amount Float
   type String
